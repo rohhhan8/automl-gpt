@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: automl_postgres
+    environment:
+      POSTGRES_USER: automl_user
+      POSTGRES_PASSWORD: automl_pass
+      POSTGRES_DB: automl_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - automl_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U automl_user -d automl_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for Celery)
+  redis:
+    image: redis:7-alpine
+    container_name: automl_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - automl_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build: ./backend
+    container_name: automl_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://automl_user:automl_pass@postgres:5432/automl_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=your-super-secret-key-change-in-production
+      - GOOGLE_CLIENT_ID=your-google-client-id
+      - GOOGLE_CLIENT_SECRET=your-google-client-secret
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    networks:
+      - automl_network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Celery Worker
+  celery_worker:
+    build: ./backend
+    container_name: automl_celery_worker
+    environment:
+      - DATABASE_URL=postgresql://automl_user:automl_pass@postgres:5432/automl_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=your-super-secret-key-change-in-production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    networks:
+      - automl_network
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=2
+
+  # Celery Flower (monitoring)
+  celery_flower:
+    build: ./backend
+    container_name: automl_celery_flower
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery_worker
+    volumes:
+      - ./backend:/app
+    networks:
+      - automl_network
+    command: celery -A app.workers.celery_app flower --port=5555
+
+  # Frontend (Next.js) - for development
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: automl_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - automl_network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+
+networks:
+  automl_network:
+    driver: bridge
