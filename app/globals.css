@@ -100,7 +100,7 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Gradient text */
+/* Gradient text - only for header */
 .gradient-text {
   background: linear-gradient(135deg, #000000 0%, #404040 100%);
   background-clip: text;

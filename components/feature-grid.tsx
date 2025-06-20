@@ -8,8 +8,7 @@ import {
   BarChart3, 
   Shield, 
   Cpu,
-  Database,
-  Rocket
+  Database
 } from 'lucide-react';
 
 const features = [
@@ -47,11 +46,6 @@ const features = [
     icon: Cpu,
     title: 'AutoML Engine',
     description: 'Advanced automated machine learning that handles feature engineering, model selection, and hyperparameter tuning.',
-  },
-  {
-    icon: Rocket,
-    title: 'One-Click Deploy',
-    description: 'Deploy your trained models to production with a single click. Scale automatically based on demand.',
   },
 ];
 
@@ -93,7 +87,7 @@ export function FeatureGrid() {
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             A complete platform that handles every aspect of machine learning, 
-            from data ingestion to model deployment.
+            from data ingestion to model training and analytics.
           </p>
         </motion.div>
 

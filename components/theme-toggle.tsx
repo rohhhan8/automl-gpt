@@ -15,7 +15,13 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return null;
+    // Show a placeholder that matches the button size to prevent layout shift
+    return (
+      <Button variant="ghost" size="sm" className="relative w-9 h-9">
+        <div className="w-4 h-4" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
   }
 
   return (
@@ -23,7 +29,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="sm"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="relative"
+      className="relative w-9 h-9"
     >
       <motion.div
         initial={false}
@@ -33,7 +39,7 @@ export function ThemeToggle() {
           rotate: theme === 'light' ? 0 : 180,
         }}
         transition={{ duration: 0.2 }}
-        className="absolute"
+        className="absolute inset-0 flex items-center justify-center"
       >
         <Sun className="h-4 w-4" />
       </motion.div>
@@ -45,7 +51,7 @@ export function ThemeToggle() {
           rotate: theme === 'dark' ? 0 : -180,
         }}
         transition={{ duration: 0.2 }}
-        className="absolute"
+        className="absolute inset-0 flex items-center justify-center"
       >
         <Moon className="h-4 w-4" />
       </motion.div>

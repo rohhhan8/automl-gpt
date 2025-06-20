@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, Zap, Crown, Rocket } from 'lucide-react';
+import { Check, Zap, Crown, Rocket, Star } from 'lucide-react';
 import { MLServicePopup } from '@/components/ml-service-popup';
 import Link from 'next/link';
 
@@ -102,35 +102,26 @@ export function PricingSection() {
                 : 'border-border/50 hover:border-foreground/20'
             }`}
           >
-            {/* Popular Badge */}
+            {/* Simple Popular Badge */}
             {plan.popular && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                className="absolute -top-4 left-1/2 transform -translate-x-1/2"
-              >
-                <span className="bg-foreground text-background px-4 py-2 rounded-full text-sm font-medium">
-                  Most Popular
-                </span>
-              </motion.div>
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <div className="bg-foreground text-background px-4 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                  <Star className="w-3 h-3" />
+                  <span>Most Popular</span>
+                </div>
+              </div>
             )}
 
-            {/* Early Bird Badge for Pro Plan */}
+            {/* Simple Discount Badge */}
             {plan.originalPrice && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
-                className="absolute -top-4 right-6"
-              >
-                <span className="bg-green-500 text-white px-3 py-2 rounded-full text-sm font-medium">
-                  $5 OFF
-                </span>
-              </motion.div>
+              <div className="absolute -top-2 -right-2">
+                <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                  Save $5
+                </div>
+              </div>
             )}
 
-            <div className="text-center mb-8">
+            <div className={`text-center mb-8 ${plan.popular ? 'mt-6' : 'mt-2'}`}>
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.3 }}
@@ -153,11 +144,6 @@ export function PricingSection() {
                 </div>
                 {plan.period && (
                   <span className="text-muted-foreground">/{plan.period}</span>
-                )}
-                {plan.originalPrice && (
-                  <p className="text-sm text-green-600 font-medium mt-2">
-                    Early Bird Special - Save $5!
-                  </p>
                 )}
               </div>
               
