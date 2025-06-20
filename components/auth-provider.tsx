@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, Profile } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { EmailService } from '@/lib/email-service';
 
 interface AuthContextType {
   user: User | null;
@@ -116,6 +117,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Fetch the newly created profile
       await fetchProfile(user.id);
       
+      // Send welcome email for Google OAuth users
+      if (event === 'SIGNED_IN' && user.app_metadata?.provider === 'google') {
+        console.log('📧 Sending welcome email for Google OAuth user...');
+        try {
+          const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userData: {
+                name: userName,
+                email: user.email!,
+                planType: 'free'
+              },
+              emailType: 'both'
+            }),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            const emailResults = result.results;
+            
+            if (emailResults.welcome) {
+              console.log('✅ Welcome email sent for Google OAuth user');
+              toast.success('Welcome! Check your email for getting started guide.');
+            } else {
+              console.log('⚠️ Welcome email failed for Google OAuth user');
+            }
+          } else {
+            const errorData = await response.json();
+            console.error('❌ Email API error for Google OAuth user:', errorData);
+          }
+        } catch (emailError) {
+          console.error('❌ Failed to send welcome email for Google OAuth user:', emailError);
+        }
+      }
+      
       // Show success message
       toast.success('Account created successfully!');
       
@@ -203,6 +242,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.user) {
         // Create profile
         await createProfile(data.user, name);
+        
+        // Note: Welcome email will be sent from the signup form component
+        // to ensure proper error handling and user feedback
+        
         toast.success('Account created successfully!');
       }
     } catch (error: any) {

@@ -13,6 +13,7 @@ import { useAuth } from '@/components/auth-provider';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -37,6 +38,7 @@ export function SignUpForm() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
@@ -44,10 +46,66 @@ export function SignUpForm() {
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true);
     try {
+      console.log('🚀 Starting signup process for:', data.email);
+      
+      // Create user account first
       await signUp(data.email, data.password, data.name);
-      // Don't redirect immediately - user needs to verify email
-    } catch (error) {
-      // Error is handled in the auth provider
+      
+      // Send welcome and admin emails after successful signup
+      console.log('📧 Sending welcome and admin emails...');
+      try {
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userData: {
+              name: data.name,
+              email: data.email,
+              planType: 'free'
+            },
+            emailType: 'both'
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const emailResults = result.results;
+          
+          if (emailResults.welcome && emailResults.admin) {
+            toast.success('Account created! Welcome email sent successfully.');
+          } else if (emailResults.welcome) {
+            toast.success('Account created! Welcome email sent.');
+          } else {
+            toast.success('Account created successfully!');
+          }
+          
+          console.log('✅ Email sending completed:', emailResults);
+        } else {
+          const errorData = await response.json();
+          console.error('❌ Email API error:', errorData);
+          toast.success('Account created successfully!');
+        }
+      } catch (emailError) {
+        console.error('❌ Email sending failed:', emailError);
+        // Don't throw error here - account was created successfully
+        toast.success('Account created successfully!');
+      }
+      
+      console.log('✅ Signup process completed successfully');
+      
+      // Reset form
+      reset();
+      
+      // Redirect to dashboard
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+      
+    } catch (error: any) {
+      console.error('❌ Signup error:', error);
+      // Error is already handled in the auth provider with toast
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +115,7 @@ export function SignUpForm() {
     try {
       await signInWithGoogle();
       // Redirect will be handled by Supabase OAuth flow
+      // Welcome email will be sent automatically in auth provider
     } catch (error) {
       // Error is handled in the auth provider
       console.error('Google sign-up error:', error);
