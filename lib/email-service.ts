@@ -59,7 +59,7 @@ class EmailServiceClass {
       const responseData = await response.json();
       
       if (response.ok) {
-        return { success: true, messageId: responseData.messageId };
+        return { success: true };
       } else {
         throw new Error(`Brevo API error: ${responseData.message || 'Unknown error'}`);
       }
