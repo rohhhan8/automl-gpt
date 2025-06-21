@@ -3,7 +3,7 @@ import { EmailTemplates, EmailTemplateData } from './email-templates';
 // Brevo Configuration
 const BREVO_API_KEY = process.env.BREVO_API_KEY!;
 const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'rohancelebrity35@gmail.com';
-const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Auto-ML GPT';
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'AutoMLGPT';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Brevo API URL
@@ -92,9 +92,9 @@ class EmailServiceClass {
       const { subject, html } = EmailTemplates.getUserWelcomeEmail(userData);
       
       const textContent = `
-Welcome to AutoML Pro, ${userData.name}!
+Welcome to AutoMLGPT, ${userData.name}!
 
-Thank you for joining AutoML Pro! You've taken the first step towards transforming your ideas into intelligent models using the power of AI.
+Thank you for joining AutoMLGPT! You've taken the first step towards transforming your ideas into intelligent models using the power of AI. We're excited to have you on board! 🚀
 
 Your ${userData.planType || 'free'} plan is now active and ready to use.
 
@@ -107,7 +107,7 @@ Need Help?
 Reply to this email or visit our Help Center. We're here to support your AI journey every step of the way.
 
 Welcome to the future of machine learning!
-The AutoML Pro Team
+The AutoMLGPT Team
 🧠 Transforming Ideas into Intelligence
       `.trim();
       
@@ -131,24 +131,27 @@ The AutoML Pro Team
       const { subject, html } = EmailTemplates.getAdminNotificationEmail(userData);
       
       const textContent = `
-🚨 NEW USER REGISTRATION ALERT
+⭐ New Pro User: ${userData.name}
 
-A new user has registered for AutoML Pro:
+A new Professional user has registered for AutoMLGPT:
 
 User Information:
 - Name: ${userData.name}
 - Email: ${userData.email}
-- Plan: ${userData.planType || 'free'} plan
+- Plan: Professional ($15/month)
+- Status: Early Bird Pricing Locked
 - Registration Time: ${new Date().toLocaleString()}
 
-Action Required:
-Please review the new user registration and take appropriate action based on their plan type.
+Next Steps:
+• Add to Pro early access list
+• Prepare payment link when service is ready
+• Early bird pricing ($15/month) is locked in
+• Add to priority support queue
 
 Contact User: ${userData.email}
-Admin Dashboard: ${this.siteUrl}/admin
 
-This is an automated notification from AutoML Pro.
-Admin Team - AutoML Pro
+AutoMLGPT Admin Team
+🧠 Transforming Ideas into Intelligence
       `.trim();
       
       const emailData: EmailData = {
@@ -176,18 +179,35 @@ Admin Team - AutoML Pro
       // Send welcome email first
       results.welcome = await this.sendWelcomeEmail(userData);
       
-      // Wait 2 seconds before sending admin notification
-      if (results.welcome) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+      // Only send admin notification for Pro users (not free users)
+      if (userData.planType === 'pro' || userData.planType === 'enterprise') {
+        // Wait 2 seconds before sending admin notification
+        if (results.welcome) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        
+        // Send admin notification only for Pro/Enterprise users
+        results.admin = await this.sendAdminNotification(userData);
+      } else {
+        // For free users, skip admin notification (you'll analyze from database)
+        results.admin = true; // Set to true to indicate "success" (no email needed)
       }
-      
-      // Send admin notification
-      results.admin = await this.sendAdminNotification(userData);
       
       return results;
     } catch (error) {
       return results;
     }
+  }
+
+  // Method to send admin notification only for specific plan types
+  async sendAdminNotificationIfNeeded(userData: EmailTemplateData): Promise<boolean> {
+    // Only send admin notifications for Pro and Enterprise users
+    if (userData.planType === 'pro' || userData.planType === 'enterprise') {
+      return await this.sendAdminNotification(userData);
+    }
+    
+    // For free users, return true (no notification needed - analyze from database)
+    return true;
   }
 }
 

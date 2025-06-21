@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             if (emailResults.welcome) {
               console.log('✅ Welcome email sent for Google OAuth user');
-              toast.success('Welcome! Check your email for getting started guide.');
+              toast.success('🎉 Welcome! Check your email for your getting started guide.');
             } else {
               console.log('⚠️ Welcome email failed for Google OAuth user');
             }

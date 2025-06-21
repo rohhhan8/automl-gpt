@@ -74,11 +74,11 @@ export function SignUpForm() {
           const emailResults = result.results;
           
           if (emailResults.welcome && emailResults.admin) {
-            toast.success('Account created! Welcome email sent successfully.');
+            toast.success('🎉 Account created! Welcome email sent successfully.');
           } else if (emailResults.welcome) {
-            toast.success('Account created! Welcome email sent.');
+            toast.success('🎉 Account created! Welcome email sent.');
           } else {
-            toast.success('Account created successfully!');
+            toast.success('🎉 Account created successfully!');
           }
           
           console.log('✅ Email sending completed:', emailResults);

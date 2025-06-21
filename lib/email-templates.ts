@@ -19,7 +19,7 @@ export class EmailTemplates {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
-    <title>AutoML Pro</title>
+    <title>AutoMLGPT</title>
     <!--[if mso]>
     <noscript>
         <xml>
@@ -415,13 +415,13 @@ export class EmailTemplates {
     };
 
     const plan = planDetails[userData.planType || 'free'];
-    const subject = `🎉 Welcome to AutoML Pro - Your ${plan.title} is Ready!`;
+    const subject = `🎉 Welcome to AutoMLGPT - Your ${plan.title} is Ready!`;
 
     const content = `
         <div class="header">
             <div class="logo">
                 <span class="logo-icon">🧠</span>
-                <span class="logo-text">AutoML Pro</span>
+                <span class="logo-text">AutoMLGPT</span>
             </div>
             <h1 class="header-title">Welcome to the Future!</h1>
             <p class="header-subtitle">Your AI journey starts here</p>
@@ -431,7 +431,7 @@ export class EmailTemplates {
             <h2 class="greeting">Hello ${userData.name}! 👋</h2>
             
             <p class="message">
-                Thank you for joining AutoML Pro! You've taken the first step towards transforming your ideas into intelligent models using the power of AI.
+                Thank you for joining AutoMLGPT! You've taken the first step towards transforming your ideas into intelligent models using the power of AI. We're excited to have you on board! 🚀
             </p>
             
             <div class="plan-card">
@@ -497,7 +497,7 @@ export class EmailTemplates {
             </div>
             <p class="footer-text">
                 Welcome to the future of machine learning!<br>
-                <strong>The AutoML Pro Team</strong><br>
+                <strong>The AutoMLGPT Team</strong><br>
                 🧠 Transforming Ideas into Intelligence
             </p>
         </div>
@@ -509,156 +509,67 @@ export class EmailTemplates {
     };
   }
 
-  // Admin notification email template
+  // Admin notification email template - Minimal design for Pro users only
   static getAdminNotificationEmail(userData: EmailTemplateData): { subject: string; html: string } {
-    const planEmojis = {
-      free: '🆓',
-      pro: '⭐',
-      enterprise: '🏢'
-    };
-
-    const planNames = {
-      free: 'Free Plan',
-      pro: 'Professional Plan',
-      enterprise: 'Enterprise Plan'
-    };
-
     const plan = userData.planType || 'free';
-    const subject = `🚨 NEW USER ALERT: ${userData.name} registered for ${planNames[plan]}`;
-
-    const actionItems = {
-      free: [
-        'Add to free user monitoring list',
-        'Track usage patterns for upgrade opportunities',
-        'Send follow-up emails about Pro features',
-        'Monitor engagement metrics'
-      ],
-      pro: [
-        'Add user to Pro early access list',
-        'Prepare payment link for when service is ready',
-        'Ensure early bird pricing ($15/month) is locked in',
-        'Add to priority support queue'
-      ],
-      enterprise: [
-        'Schedule enterprise demo call within 24 hours',
-        'Prepare custom pricing proposal',
-        'Assign dedicated account manager',
-        'Send enterprise welcome package'
-      ]
-    };
+    const subject = `⭐ New Pro User: ${userData.name}`;
 
     const content = `
         <div class="header">
             <div class="logo">
-                <span class="logo-icon">🚨</span>
-                <span class="logo-text">Admin Alert</span>
+                <span class="logo-icon">🧠</span>
+                <span class="logo-text">AutoMLGPT</span>
             </div>
-            <h1 class="header-title">New User Registration</h1>
-            <p class="header-subtitle">Action Required</p>
+            <h1 class="header-title">New Pro Registration</h1>
+            <p class="header-subtitle">Early Access User</p>
         </div>
         
         <div class="content">
-            <div class="admin-alert">
-                <h3 class="admin-alert-title">🚨 NEW USER REGISTRATION ALERT</h3>
-                <p>A new user has registered for the ${planNames[plan]}. Immediate action may be required.</p>
-            </div>
-            
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-card-icon">👤</div>
-                    <h4 class="info-card-title">User Information</h4>
-                    <div class="info-card-desc">
-                        <strong>Name:</strong> ${userData.name}<br>
-                        <strong>Email:</strong> ${userData.email}<br>
-                        <strong>Plan:</strong> ${planEmojis[plan]} ${planNames[plan]}
-                    </div>
-                </div>
-                <div class="info-card">
-                    <div class="info-card-icon">⏰</div>
-                    <h4 class="info-card-title">Registration Details</h4>
-                    <div class="info-card-desc">
-                        <strong>Time:</strong> ${new Date().toLocaleString()}<br>
-                        <strong>Source:</strong> AutoML Pro Website<br>
-                        <strong>Status:</strong> Active
-                    </div>
-                </div>
-            </div>
-            
             <div class="plan-card">
                 <div class="plan-badge">
-                    ${planEmojis[plan]} ${planNames[plan].toUpperCase()}
+                    ⭐ PRO EARLY ACCESS
                 </div>
-                <h3 class="plan-title">Plan Details</h3>
+                <h3 class="plan-title">New Professional User</h3>
                 
-                ${plan === 'free' ? `
-                    <p class="message">
-                        <strong>🆓 FREE PLAN USER</strong><br>
-                        • User signed up for the free plan<br>
-                        • They can upgrade to Pro or Enterprise anytime<br>
-                        • Monitor usage for upgrade opportunities
-                    </p>
-                ` : plan === 'pro' ? `
-                    <p class="message">
-                        <strong>⭐ PROFESSIONAL PLAN (EARLY ACCESS)</strong><br>
-                        • User registered for early access to Pro Plan<br>
-                        • Early bird pricing: $15/month (Save $5!)<br>
-                        • Send payment link when ML service is ready<br>
-                        • Pricing is locked in for this user
-                    </p>
-                ` : `
-                    <p class="message">
-                        <strong>🏢 ENTERPRISE PLAN INQUIRY</strong><br>
-                        • User interested in Enterprise Plan<br>
-                        • Custom pricing discussion required<br>
-                        • Schedule demo call ASAP<br>
-                        • Assign dedicated account manager
-                    </p>
-                `}
-            </div>
-            
-            <div class="highlight">
-                <strong>⚡ ACTION REQUIRED:</strong><br><br>
-                <ul class="features-list">
-                    ${actionItems[plan].map(action => `
-                        <li>
-                            <span class="check-icon">⚡</span>
-                            ${action}
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-            
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-card-icon">📧</div>
-                    <h4 class="info-card-title">Contact User</h4>
-                    <div class="info-card-desc">
-                        <a href="mailto:${userData.email}" style="color: #10b981; text-decoration: none;">
-                            ${userData.email}
-                        </a>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-icon">👤</div>
+                        <h4 class="info-card-title">${userData.name}</h4>
+                        <div class="info-card-desc">
+                            <strong>Email:</strong> ${userData.email}<br>
+                            <strong>Plan:</strong> Professional ($15/month)<br>
+                            <strong>Status:</strong> Early Bird Pricing Locked
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">⏰</div>
+                        <h4 class="info-card-title">Registration</h4>
+                        <div class="info-card-desc">
+                            <strong>Time:</strong> ${new Date().toLocaleString()}<br>
+                            <strong>Source:</strong> AutoMLGPT Website<br>
+                            <strong>Priority:</strong> High Value User
+                        </div>
                     </div>
                 </div>
-                <div class="info-card">
-                    <div class="info-card-icon">📊</div>
-                    <h4 class="info-card-title">Admin Dashboard</h4>
-                    <div class="info-card-desc">
-                        <a href="${this.siteUrl}/admin" style="color: #10b981; text-decoration: none;">
-                            View Dashboard
-                        </a>
-                    </div>
+                
+                <div class="highlight">
+                    <strong>Next Steps:</strong><br>
+                    • Add to Pro early access list<br>
+                    • Prepare payment link when service is ready<br>
+                    • Early bird pricing ($15/month) is locked in<br>
+                    • Add to priority support queue
                 </div>
             </div>
             
             <div class="cta-section">
-                <a href="mailto:${userData.email}" class="cta-button">Contact User Now</a>
+                <a href="mailto:${userData.email}" class="cta-button">Contact User</a>
             </div>
         </div>
         
         <div class="footer">
             <p class="footer-text">
-                This is an automated notification from AutoML Pro.<br>
-                Please take appropriate action based on the user's plan type.<br><br>
-                <strong>Admin Team - AutoML Pro</strong>
+                <strong>AutoMLGPT Admin Team</strong><br>
+                🧠 Transforming Ideas into Intelligence
             </p>
         </div>
     `;
