@@ -7,7 +7,6 @@ import { EmailJSProvider } from '@/components/emailjs-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
-import { VersionCheck } from '@/components/version-check';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,7 +32,6 @@ export default function RootLayout({
         >
           <EmailJSProvider>
             <AuthProvider>
-              <VersionCheck />
               <div className="flex min-h-screen flex-col">
                 <Navigation />
                 <main className="flex-1">
