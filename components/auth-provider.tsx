@@ -247,6 +247,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // to ensure proper error handling and user feedback
         
         toast.success('Account created successfully!');
+        
+        // Force a page reload to ensure fresh content after signup
+        setTimeout(() => {
+          if (typeof window !== 'undefined') {
+            window.location.href = '/dashboard';
+          }
+        }, 1000);
       }
     } catch (error: any) {
       console.error('❌ Signup error:', error);
@@ -267,6 +274,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       toast.success('Welcome back!');
+      
+      // Force a page reload to ensure fresh content after sign in
+      setTimeout(() => {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/dashboard';
+        }
+      }, 1000);
     } catch (error: any) {
       console.error('Error signing in:', error);
       toast.error(error.message || 'Failed to sign in');

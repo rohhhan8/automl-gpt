@@ -1,22 +1,15 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = "out"
 
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "9"
   NEXT_TELEMETRY_DISABLED = "1"
+  # Force fresh builds
+  NETLIFY_SKIP_EDGE_HANDLERS_PLUGIN = "true"
 
-[[redirects]]
-  from = "/result/:jobId"
-  to = "/result/[jobId]"
-  status = 200
-
-[[redirects]]
-  from = "/status/:jobId"
-  to = "/status/[jobId]"
-  status = 200
-
+# Handle client-side routing for Next.js SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -25,6 +18,7 @@
 [functions]
   node_bundler = "esbuild"
 
+# Cache busting headers to prevent stale content
 [[headers]]
   for = "/*"
   [headers.values]
@@ -32,6 +26,10 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Prevent caching of HTML files
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
 
 [[headers]]
   for = "/api/*"
@@ -39,3 +37,26 @@
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Cache static assets but with versioning
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Ensure fresh JavaScript and CSS
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
