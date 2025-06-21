@@ -8,9 +8,22 @@
   NEXT_TELEMETRY_DISABLED = "1"
 
 [[redirects]]
+  from = "/result/:jobId"
+  to = "/result/[jobId]"
+  status = 200
+
+[[redirects]]
+  from = "/status/:jobId"
+  to = "/status/[jobId]"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[functions]
+  node_bundler = "esbuild"
 
 [[headers]]
   for = "/*"

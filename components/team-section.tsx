@@ -7,7 +7,7 @@ const team = [
   {
     name: 'Rohan Mahato',
     role: 'CEO & Co-Founder',
-    bio: 'Visionary leader with expertise in AI and machine learning. Passionate about democratizing artificial intelligence.',
+    bio: 'Visionary leader with expertise in Development and AI Tools content Creation, Product Management, and Design. Passionate about democratizing artificial intelligence.',
     avatar: (
       <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
         <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center">
@@ -16,8 +16,8 @@ const team = [
       </div>
     ),
     social: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
+      linkedin: 'https://www.linkedin.com/in/rohanmahato',
+      twitter: 'https://x.com/notahooman_18',
       github: 'https://github.com',
     },
   },
