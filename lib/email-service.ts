@@ -24,7 +24,7 @@ interface EmailData {
 
 class EmailServiceClass {
   private adminEmail = 'rohancelebrity35@gmail.com';
-  private siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://automlpro.netlify.app';
+  private siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://automlgpt.netlify.app';
 
   async sendEmail(emailData: EmailData, retryCount = 0): Promise<{ success: boolean; error?: any }> {
     const maxRetries = 3;

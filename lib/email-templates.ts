@@ -6,7 +6,7 @@ export interface EmailTemplateData {
 }
 
 export class EmailTemplates {
-  private static siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://automlpro.netlify.app';
+  private static siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://automlgpt.netlify.app';
   private static adminEmail = 'rohancelenrity35@gmail.com';
 
   // Base HTML template with modern styling - Optimized for email clients

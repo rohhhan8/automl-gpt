@@ -89,8 +89,8 @@ class MLTrainer:
             "dataset_size": random.randint(1000, 50000),
             "features_used": random.sample(features, k=random.randint(5, 10)),
             "model_size": f"{random.randint(10, 500)}MB",
-            "download_url": f"https://api.automlpro.com/models/{uuid.uuid4()}/download",
-            "api_endpoint": f"https://api.automlpro.com/models/{uuid.uuid4()}/predict",
+            "download_url": f"https://api.automlgpt.com/models/{uuid.uuid4()}/download",
+            "api_endpoint": f"https://api.automlgpt.com/models/{uuid.uuid4()}/predict",
             "metrics": {
                 "precision": precision,
                 "recall": recall,
